@@ -6,7 +6,7 @@ A YouTube clone built using React to practice component-based UI and layout.
 
 ## 🛠 Tech Stack
 
-- React
+- React 
 - JavaScript
 - CSS
 - Vite
