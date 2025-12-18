@@ -9,18 +9,50 @@ import thumbnail6 from "../../assets/thumbnail6.png";
 import thumbnail7 from "../../assets/thumbnail7.png";
 import thumbnail8 from "../../assets/thumbnail8.png";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+import moment from "moment/moment";
+const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
-const Feed = ({category}) => {
+const Feed = ({ category }) => {
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const videoList_url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&videoCategoryId=${category}&key=${API_KEY}`;
+
+      const response = await fetch(videoList_url);
+      const data = await response.json();
+      setData(data.items);
+    } catch (error) {
+      console.error("Error fetching YouTube data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [category]);
 
   return (
     <div className="feed">
-      <Link to={`video/20/4521`} className="card">
-        <img src={thumbnail1} alt="" />
-        <h2>Best Chanal to learn coding that help you to be a web developer</h2>
-        <h3>Ducat</h3>
-        <p>20k views &bull; 2 days ago </p>
-      </Link>
-      <div className="card">
+      {data.map((item, index) => {
+        return (
+          <Link
+            to={`video/${item.snippet.categoryID}/${item.id}`}
+            className="card"
+          >
+            <img src={item.snippet.thumbnails.medium.url} alt="" />
+            <h2>{item.snippet.title}</h2>
+            <h3>{item.snippet.channelTitle}</h3>
+            <p>
+              {item.statistics.viewCount} views &bull;{" "}
+              {moment(item.snippet.publishedAt).fromNow()}
+            </p>
+          </Link>
+        );
+      })}
+
+      {/* <div className="card">
         <img src={thumbnail2} alt="" />
         <h2>Best Chanal to learn coding that help you to be a web developer</h2>
         <h3>Ducat</h3>
@@ -109,7 +141,7 @@ const Feed = ({category}) => {
         <h2>Best Chanal to learn coding that help you to be a web developer</h2>
         <h3>Ducat</h3>
         <p>20k views &bull; 2 days ago </p>
-      </div>
+      </div> */}
     </div>
   );
 };
