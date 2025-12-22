@@ -19,7 +19,13 @@ const Feed = ({ category }) => {
 
   const fetchData = async () => {
     try {
-      const videoList_url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&videoCategoryId=${category}&key=${API_KEY}`;
+      const videoList_url = `https://www.googleapis.com/youtube/v3/videos
+?part=snippet,contentDetails,statistics
+&chart=mostPopular
+&regionCode=US
+&videoCategoryId=${category}
+&maxResults=50
+&key=${API_KEY}`;
 
       const response = await fetch(videoList_url);
       const data = await response.json();
@@ -52,12 +58,16 @@ const Feed = ({ category }) => {
         );
       })}
 
-      {/* <div className="card">
-        <img src={thumbnail2} alt="" />
-        <h2>Best Chanal to learn coding that help you to be a web developer</h2>
-        <h3>Ducat</h3>
-        <p>20k views &bull; 2 days ago </p>
-      </div>
+      {/*
+        <div className="card">
+          <img src={thumbnail2} alt="" />
+          <h2>
+            Best Chanal to learn coding that help you to be a web developer
+          </h2>
+          <h3>Ducat</h3>
+          <p>20k views &bull; 2 days ago </p>
+        </div>
+        
       <div className="card">
         <img src={thumbnail3} alt="" />
         <h2>Best Chanal to learn coding that help you to be a web developer</h2>

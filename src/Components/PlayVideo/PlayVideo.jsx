@@ -7,10 +7,17 @@ import share from "../../assets/share.png";
 import save from "../../assets/save.png";
 import jack from "../../assets/jack.png";
 
-const PlayVideo = () => {
+const PlayVideo = ({ videoId }) => {
   return (
     <div className="play-video">
-      <video src={video1} controls autoPlay muted></video>
+      {/* <video src={video1} controls autoPlay muted></video> */}
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      ></iframe>
       <h3>Best You tube chanal to learn Web Development</h3>
       <div className="play-video-info">
         <p>1524 Views &bull; 2 days ago</p>
