@@ -6,8 +6,27 @@ import dislike from "../../assets/dislike.png";
 import share from "../../assets/share.png";
 import save from "../../assets/save.png";
 import jack from "../../assets/jack.png";
+import { useState } from "react";
+import { useEffect } from "react";
+const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 const PlayVideo = ({ videoId }) => {
+  const [apiData, setApiData] = useState(null);
+
+  const fetchVideoData = async () => {
+    // fetching video data
+    const videoDetails_url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${API_KEY}
+`;
+    // Ks-_Mh1QhMc
+
+    await fetch(videoDetails_url)
+      .then((res) => res.json())
+      .then((data) => setApiData(data.items[0]));
+  };
+
+  useEffect(() => {
+    fetchVideoData();
+  }, []);
   return (
     <div className="play-video">
       {/* <video src={video1} controls autoPlay muted></video> */}
@@ -18,7 +37,7 @@ const PlayVideo = ({ videoId }) => {
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
       ></iframe>
-      <h3>Best You tube chanal to learn Web Development</h3>
+      <h3>{apiData ? apiData.snippet.title : "Title here"}</h3>
       <div className="play-video-info">
         <p>1524 Views &bull; 2 days ago</p>
         <div>
