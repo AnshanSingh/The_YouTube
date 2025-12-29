@@ -8,10 +8,12 @@ import save from "../../assets/save.png";
 import jack from "../../assets/jack.png";
 import { useState } from "react";
 import { useEffect } from "react";
+import moment from "moment";
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 const PlayVideo = ({ videoId }) => {
   const [apiData, setApiData] = useState(null);
+  const [channelData, setChannelData] = useState(null);
 
   const fetchVideoData = async () => {
     // fetching video data
@@ -24,9 +26,27 @@ const PlayVideo = ({ videoId }) => {
       .then((data) => setApiData(data.items[0]));
   };
 
+  const fetchOtherData = async () => {
+    // fetching Channel Data
+    const channelData_url = `https://www.googleapis.com/youtube/v3/channels
+?part=snippet,statistics
+&id=${apiData.snippet.channelId}
+&key={API_KEY}
+`;
+    // UC_x5XG1OV2P6uZZ5FSM9Ttw
+
+    await fetch(channelData_url)
+      .then((res) => res.json())
+      .then((data) => setChannelData(data.items[0]));
+  };
+
   useEffect(() => {
     fetchVideoData();
   }, []);
+
+  useEffect(() => {
+    fetchOtherData();
+  }, [apiData]);
   return (
     <div className="play-video">
       {/* <video src={video1} controls autoPlay muted></video> */}
@@ -39,14 +59,17 @@ const PlayVideo = ({ videoId }) => {
       ></iframe>
       <h3>{apiData ? apiData.snippet.title : "Title here"}</h3>
       <div className="play-video-info">
-        <p>1524 Views &bull; 2 days ago</p>
+        <p>
+          {apiData ? apiData.statistics.viewCount : "16k"} Views &bull;
+          {apiData ? moment(apiData.snippet.publishedAt).fromNow() : ""}
+        </p>
         <div>
           <span>
             <img src={like} alt="" />
-            125
+            {apiData ? apiData.statistics.likeCount : 155}
           </span>
           <span>
-            <img src={dislike} alt="" />2
+            <img src={dislike} alt="" />
           </span>
           <span>
             <img src={share} alt="" />
@@ -60,18 +83,25 @@ const PlayVideo = ({ videoId }) => {
       </div>
       <hr />
       <div className="publisher">
-        <img src={jack} alt="" />
+        <img
+          src={channelData ? channelData.snippet.thumbnails.default.url : ""}
+          alt=""
+        />
         <div>
-          <p>Ducat</p>
+          <p>{apiData ? apiData.snippet.channelTitle : ""}</p>
           <span>1m Subscribers</span>
         </div>
         <button>Subscribe</button>
       </div>
       <div className="vid-description">
-        <p>Chanal That makes learning easy</p>
+        <p>
+          {apiData
+            ? apiData.snippet.description.slice(0, 250)
+            : "Description Here"}
+        </p>
         <p>Subscribe Ducat to watch More Tutorial on web development</p>
         <hr />
-        <h4>130 Comment</h4>
+        <h4>{apiData ? apiData.statistics.commentCount : 102}Comments</h4>
         <div className="comment">
           <img src={jack} alt="" />
           <div>
